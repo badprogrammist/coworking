@@ -3,6 +3,8 @@
   <persistence-unit name="coworking" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>ru.dodrde.coworking.domain.member.CoworkingMember</class>
+    <class>ru.dodrde.coworking.domain.place.Place</class>
+    <class>ru.dodrde.coworking.domain.booking.Reservation</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/coworking"/>

@@ -3,4 +3,12 @@
     <p>Имя: {{member.name}}</p>
     <p>Фамилия: {{member.lastname}}</p>
     <p>Отчество: {{member.patronymic}}</p>
+    <table>
+        <tr ng-repeat="booking in bookings">
+            <td><a href="#/place/{{booking.placeId}}">{{booking.placeTitle}}</a></td>
+            <td>{{booking.fromTime | date:'yyyy-MM-dd HH:mm'}}</td>
+            <td>{{booking.toTime | date:'yyyy-MM-dd HH:mm'}}</td>
+            <td></td>
+        </tr>
+    </table>
 </div>

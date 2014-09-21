@@ -7,8 +7,9 @@ function MemberListController($scope, MemberFactory) {
     };
 }
 
-function MemberViewController($scope, $routeParams, MemberFactory) {
+function MemberViewController($scope, $routeParams, MemberFactory, BookingFactory) {
     $scope.member = MemberFactory.get({id: $routeParams.id});
+    $scope.bookings = BookingFactory.memberReservations({memberId: $routeParams.id});
 }
 
 function MemberCreateController($scope, $location, MemberFactory) {
@@ -30,7 +31,7 @@ function MemberEditController($scope, $routeParams, $location, MemberFactory) {
 }
 
 angular
-        .module('MemberModule', ['ngRoute', 'ngResource'])
+        .module('MemberModule', ['ngRoute', 'ngResource','BookingModule'])
         .config(['$routeProvider',
             function($routeProvider) {
                 $routeProvider.

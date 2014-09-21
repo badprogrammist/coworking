@@ -1,0 +1,17 @@
+<div>
+    <p>С: <input type="date" ng-model="booking.fromTime" required="true"></p>
+    <p>По: <input type="date" ng-model="booking.toTime" required="true"></p>
+    <p>
+        Пользователь: 
+        <select ng-model="booking.memberId">
+            <option ng-repeat="member in members" value="{{member.id}}">{{member.name}} {{member.lastname}}</option> 
+        </select>
+    </p>
+    <p>
+        Рабочее место: 
+        <select ng-model="booking.placeId">
+            <option ng-repeat="place in places" value="{{place.id}}">{{place.title}}</option> 
+        </select>
+    </p>
+    <button type="submit" ng-click="save()">Сохранить</button>
+</div>
