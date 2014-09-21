@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Coworking</title>
+    </head>
+    <body ng-app="AppModule">
+        <ul>
+            <li><a href="#/member">Пользователи</a></li>
+        </ul>
+        <div ng-view></div>
+        <!-- Angular -->
+        <script src="resources/angular/angular.js"></script>
+        <script src="resources/angular/angular-resource.js"></script>
+        <script src="resources/angular/angular-cookies.js"></script>
+        <script src="resources/angular/angular-route.js"></script>
+        <!-- Application -->
+        <script src="app/app-module.js"></script>
+        <script src="app/member/member-module.js"></script>
+    </body>
+</html>

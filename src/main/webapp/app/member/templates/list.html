@@ -1,0 +1,10 @@
+<div>
+    <a href="#/member/new">Новый пользователь</a>
+    <table>
+        <tr ng-repeat="member in members">
+            <td>{{member.name}} {{member.lastname}}</td>
+            <td><a href="#/member/{{member.id}}">Просмотр</a></td>
+            <td><a href="#/member" ng-click="remove(member)">Удалить</a></td>
+        </tr>
+    </table>
+</div>
