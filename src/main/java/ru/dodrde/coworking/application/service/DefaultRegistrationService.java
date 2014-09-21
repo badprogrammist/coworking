@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ru.dodrde.coworking.application.registration;
+package ru.dodrde.coworking.application.service;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -28,7 +28,7 @@ public class DefaultRegistrationService implements MemberRegistrationService {
     
     
     @Override
-    public void registerNewMember(CoworkingMemberData memberData) {
+    public void registerMember(CoworkingMemberData memberData) {
         CoworkingMember member = new CoworkingMember(memberData);
         memberRepository.store(member);
     }

@@ -1,4 +1,4 @@
-angular.module('AppModule', ['ngRoute','MemberModule']);
+angular.module('AppModule', ['ngRoute','MemberModule','PlaceModule']);
 
 
 

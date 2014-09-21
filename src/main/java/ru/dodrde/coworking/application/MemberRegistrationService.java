@@ -16,7 +16,7 @@ import ru.dodrde.coworking.domain.member.CoworkingMemberData;
  */
 public interface MemberRegistrationService {
     
-    public void registerNewMember(CoworkingMemberData memberData);
+    public void registerMember(CoworkingMemberData memberData);
     public List<CoworkingMember> getCoworkingMembers();
     public CoworkingMember getCoworkingMember(Long id);
     public void removeCoworkingMember(Long id);

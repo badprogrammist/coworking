@@ -6,13 +6,14 @@
 
 package ru.dodrde.coworking.ui.member.dto;
 
+import ru.dodrde.coworking.ui.DTO;
+
 
 /**
  *
  * @author Ильдар
  */
-public class ViewMemberData {
-    private long id;
+public class ViewMemberData extends DTO {
     private String name;
     private String lastname;
     private String patronymic;
@@ -20,8 +21,8 @@ public class ViewMemberData {
     public ViewMemberData() {
     }
 
-    public ViewMemberData(long id, String name, String lastname, String patronymic) {
-        this.id = id;
+    public ViewMemberData(Long id, String name, String lastname, String patronymic) {
+        super(id);
         this.name = name;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -53,13 +54,5 @@ public class ViewMemberData {
         this.patronymic = patronymic;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-    
     
 }

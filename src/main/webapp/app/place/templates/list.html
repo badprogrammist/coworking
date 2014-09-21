@@ -1,0 +1,10 @@
+<div>
+    <a href="#/place/new">Создать новое рабочее место</a>
+    <table>
+        <tr ng-repeat="place in places">
+            <td>{{place.title}}</td>
+            <td><a href="#/place/{{place.id}}">Просмотр</a></td>
+            <td><a href="#/place" ng-click="remove(place)">Удалить</a></td>
+        </tr>
+    </table>
+</div>

@@ -18,6 +18,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class AbstractEntity implements Serializable {
+    
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -30,6 +31,6 @@ public class AbstractEntity implements Serializable {
     public Long getId() {
         return id;
     }
-    
+
     
 }

@@ -48,7 +48,7 @@ public class MemberController {
     @ResponseBody
     public void addMember(@RequestBody NewMemberData data) {
         CoworkingMemberData memberData = new CoworkingMemberData(data.getName(), data.getLastname(), data.getPatronymic());
-        registrationService.registerNewMember(memberData);
+        registrationService.registerMember(memberData);
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
