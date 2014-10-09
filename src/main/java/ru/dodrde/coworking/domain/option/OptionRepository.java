@@ -4,15 +4,14 @@
  * and open the template in the editor.
  */
 
-package ru.dodrde.coworking.application;
+package ru.dodrde.coworking.domain.option;
 
-import java.util.List;
-import ru.dodrde.coworking.domain.place.Place;
+import ru.dodrde.coworking.domain.EntityRepository;
 
 /**
  *
  * @author Ильдар
  */
-public interface PlaceService extends CRUDService<Place> {
-    public void createPlace(String title);
+public interface OptionRepository extends EntityRepository<Option> {
+    
 }

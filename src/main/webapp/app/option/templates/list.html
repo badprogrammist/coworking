@@ -1,0 +1,10 @@
+<div>
+    <a href="#/option/new">Создать новое рабочее место</a>
+    <table>
+        <tr ng-repeat="option in options">
+            <td>{{option.title}}</td>
+            <td><a href="#/option/{{option.id}}">Просмотр</a></td>
+            <td><a href="#/option" ng-click="remove(option)">Удалить</a></td>
+        </tr>
+    </table>
+</div>

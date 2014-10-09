@@ -37,7 +37,7 @@ public class PlaceController {
     @ResponseBody
     public List<ListPlaceData> getPlaces() {
         List<ListPlaceData> places = new ArrayList<>();
-        for(Place place : placeService.getPlaces()) {
+        for(Place place : placeService.getAll()) {
             places.add(new ListPlaceData(place.getId(), place.getTitle()));
         }
         return places;
@@ -52,7 +52,7 @@ public class PlaceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ViewPlaceData getPlace(@PathVariable("id") Long id) {
-        Place place = placeService.getPlace(id);
+        Place place = placeService.get(id);
         if(place != null) {
             ViewPlaceData data = new ViewPlaceData(place.getId(), place.getTitle());
             return data;
@@ -63,16 +63,16 @@ public class PlaceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void deletePlace(@PathVariable("id") Long id) {
-        placeService.removePlace(id);
+        placeService.remove(id);
     }
     
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void updatePlace(@RequestBody ViewPlaceData data) {
-        Place place = placeService.getPlace(data.getId());
+        Place place = placeService.get(data.getId());
         if(place != null) {
             place.setTitle(data.getTitle());
-            placeService.updatePlace(place);
+            placeService.update(place);
         }
     }
 }

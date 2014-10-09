@@ -6,14 +6,14 @@
 
 package ru.dodrde.coworking.application.service;
 
-import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.dodrde.coworking.application.PlaceService;
+import ru.dodrde.coworking.application.OptionService;
 import ru.dodrde.coworking.domain.EntityRepository;
-import ru.dodrde.coworking.domain.place.Place;
-import ru.dodrde.coworking.domain.place.PlaceRepository;
+import ru.dodrde.coworking.domain.option.Option;
+import ru.dodrde.coworking.domain.option.OptionDescription;
+import ru.dodrde.coworking.domain.option.OptionRepository;
 
 /**
  *
@@ -21,24 +21,20 @@ import ru.dodrde.coworking.domain.place.PlaceRepository;
  */
 @Service
 @Transactional
-public class DefaultPlaceService extends AbstractCRUDService<Place> implements PlaceService {
+public class DefaultOptionService extends AbstractCRUDService<Option> implements OptionService {
 
     @Inject
-    private PlaceRepository placeRepository;
+    private OptionRepository optionRepository;
+
+    @Override
+    public void createOption(OptionDescription description) {
+        Option option = new Option(description);
+        optionRepository.store(option);
+    }
     
     @Override
-    public void createPlace(String title) {
-        Place place = new Place(title);
-        placeRepository.store(place);
-    }
-
-    @Override
-    public void remove(Long id) {
-    }
-
-    @Override
     protected EntityRepository getRepository() {
-        return placeRepository;
+        return optionRepository;
     }
     
 }

@@ -47,8 +47,8 @@ public class BookingController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void book(@RequestBody NewBookData data) {
-        Place place = placeService.getPlace(data.getPlaceId());
-        CoworkingMember member = memberRegistrationService.getCoworkingMember(data.getMemberId());
+        Place place = placeService.get(data.getPlaceId());
+        CoworkingMember member = memberRegistrationService.get(data.getMemberId());
         ReservationPeriod period = new ReservationPeriod(data.getFromTime(), data.getToTime());
         if (place != null && member != null) {
             bookingService.book(member, place, period);
@@ -58,7 +58,7 @@ public class BookingController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<MemberReservationData> getMemberReservations(@RequestParam("memberId") Long memberId) {
-        CoworkingMember member = memberRegistrationService.getCoworkingMember(memberId);
+        CoworkingMember member = memberRegistrationService.get(memberId);
         if (member != null) {
             List<MemberReservationData> reservations = new ArrayList<>();
             for (Reservation reservation : bookingService.getMemberReservations(member)) {

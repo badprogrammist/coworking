@@ -1,0 +1,21 @@
+<div>
+    <p>Название: <input type="text" ng-model="tariff.title" min="1" required="true"></p>
+    <p>Описание: <input type="text" ng-model="tariff.description" min="1" required="true"></p>
+    <p>Стоимость: <input type="text" ng-model="tariff.price" min="1" required="true"></p>
+    <p>
+        Продолжительность: 
+        <input type="text" ng-model="tariff.periodQuantity" min="1" required="true">
+        <select ng-model="tariff.durationPeriod">
+            <option ng-repeat="period in periods" value="{{period.name}}" ng-selected="period.title == tariff.durationPeriod">{{period.title}}</option> 
+        </select>
+    </p>
+    <p>Опции: </p>
+    <table>
+        <tr ng-repeat="option in options">
+            <td><input type="checkbox"  ng-checked="checkedOption(option)" ng-click="changeOption(option)"/></td>
+            <td>{{option.title}}</td>
+        </tr>
+    </table>
+
+    <button type="submit" ng-click="save()">Сохранить</button>
+</div>

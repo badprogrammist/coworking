@@ -8,6 +8,7 @@ package ru.dodrde.coworking.application.service;
 
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dodrde.coworking.application.CRUDService;
 import ru.dodrde.coworking.domain.AbstractEntity;
 import ru.dodrde.coworking.domain.EntityRepository;
 
@@ -17,33 +18,34 @@ import ru.dodrde.coworking.domain.EntityRepository;
  * @param <E>
  */
 @Transactional
-public abstract class AbstractService<E extends AbstractEntity> {
+public abstract class AbstractCRUDService<E extends AbstractEntity> implements CRUDService<E> {
     
     protected abstract EntityRepository getRepository();
     
-    protected void store(E entity) {
-        getRepository().store(entity);
-    }
-    
-    protected void update(E entity) {
+    @Override
+    public void update(E entity) {
         getRepository().update(entity);
     }
     
+    @Override
     public List<E> getAll() {
         return getRepository().getAll();
     }
     
-    public E get(long id) {
+    @Override
+    public E get(Long id) {
         return (E)getRepository().get(id);
     }
     
-    public void remove(long id) {
+    @Override
+    public void remove(Long id) {
         E entity = get(id);
         if(entity != null) {
             remove(entity);
         }
     }
     
+    @Override
     public void remove(E entity) {
         getRepository().remove(entity);
     }

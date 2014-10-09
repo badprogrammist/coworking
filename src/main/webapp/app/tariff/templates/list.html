@@ -1,0 +1,10 @@
+<div>
+    <a href="#/tariff/new">Создать новый тариф</a>
+    <table>
+        <tr ng-repeat="tariff in tariffs">
+            <td>{{tariff.title}}</td>
+            <td><a href="#/tariff/{{tariff.id}}">Просмотр</a></td>
+            <td><a href="#/tariff" ng-click="remove(tariff)">Удалить</a></td>
+        </tr>
+    </table>
+</div>

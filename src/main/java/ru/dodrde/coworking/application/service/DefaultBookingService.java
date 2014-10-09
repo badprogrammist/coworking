@@ -26,20 +26,31 @@ public class DefaultBookingService implements BookingService {
 
     @Inject
     private ReservationRepository reservationRepository;
-    
+
     // TODO добавить проверку
     @Override
     public void book(CoworkingMember coworkingMember, Place place, ReservationPeriod reservationPeriod) {
-        if (checkReservationPeriod(reservationPeriod)) {
+        if (checkReservationPeriod(place, reservationPeriod)) {
             Reservation reservation = new Reservation(place, coworkingMember, reservationPeriod);
             reservationRepository.store(reservation);
         }
     }
 
-    private boolean checkReservationPeriod(ReservationPeriod reservationPeriod) {
-        return reservationPeriod.getFromTime() != null
-                && reservationPeriod.getToTime() != null
-                && reservationPeriod.getFromTime().before(reservationPeriod.getToTime());
+    private boolean checkReservationPeriod(Place place, ReservationPeriod rP) {
+        if (rP.getFromTime() != null
+                && rP.getToTime() != null
+                && rP.getFromTime().before(rP.getToTime())) {
+            List<Reservation> placeReservations = getPlaceReservations(place);
+            for (Reservation placeReservation : placeReservations) {
+                ReservationPeriod placeRP = placeReservation.getReservationPeriod();
+                if ((placeRP.getFromTime().before(rP.getToTime())) && (placeRP.getToTime().before(rP.getFromTime()))) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
     @Override

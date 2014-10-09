@@ -38,14 +38,11 @@ public class MemberController {
     @Inject
     private MemberRegistrationService registrationService;
 
-    @Inject
-    private BookingService bookingService;
-
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ListMemberData> getMembers() {
         List<ListMemberData> members = new ArrayList<>();
-        for (CoworkingMember member : registrationService.getCoworkingMembers()) {
+        for (CoworkingMember member : registrationService.getAll()) {
             members.add(new ListMemberData(member.getId(), member.getMemberData().getName(), member.getMemberData().getLastname(), member.getMemberData().getPatronymic()));
         }
         return members;
@@ -61,7 +58,7 @@ public class MemberController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ViewMemberData getMember(@PathVariable("id") Long id) {
-        CoworkingMember member = registrationService.getCoworkingMember(id);
+        CoworkingMember member = registrationService.get(id);
         if (member != null) {
             ViewMemberData data = new ViewMemberData(member.getId(), member.getMemberData().getName(), member.getMemberData().getLastname(), member.getMemberData().getPatronymic());
             return data;
@@ -72,18 +69,18 @@ public class MemberController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void deleteMember(@PathVariable("id") Long id) {
-        registrationService.removeCoworkingMember(id);
+        registrationService.remove(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void updateMember(@RequestBody ViewMemberData data) {
-        CoworkingMember member = registrationService.getCoworkingMember(data.getId());
+        CoworkingMember member = registrationService.get(data.getId());
         if (member != null) {
             member.getMemberData().setName(data.getName());
             member.getMemberData().setLastname(data.getLastname());
             member.getMemberData().setPatronymic(data.getPatronymic());
-            registrationService.updateCoworkingMember(member);
+            registrationService.update(member);
         }
     }
 

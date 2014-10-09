@@ -5,6 +5,9 @@
     <class>ru.dodrde.coworking.domain.member.CoworkingMember</class>
     <class>ru.dodrde.coworking.domain.place.Place</class>
     <class>ru.dodrde.coworking.domain.booking.Reservation</class>
+    <class>ru.dodrde.coworking.domain.option.Option</class>
+    <class>ru.dodrde.coworking.domain.tariff.Tariff</class>
+    <class>ru.dodrde.coworking.domain.tariff.TariffOptionRelation</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/coworking"/>

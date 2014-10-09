@@ -6,7 +6,6 @@
 
 package ru.dodrde.coworking.application;
 
-import java.util.List;
 import ru.dodrde.coworking.domain.member.CoworkingMember;
 import ru.dodrde.coworking.domain.member.CoworkingMemberData;
 
@@ -14,12 +13,7 @@ import ru.dodrde.coworking.domain.member.CoworkingMemberData;
  *
  * @author Ильдар
  */
-public interface MemberRegistrationService {
-    
+public interface MemberRegistrationService extends CRUDService<CoworkingMember> {
     public void registerMember(CoworkingMemberData memberData);
-    public List<CoworkingMember> getCoworkingMembers();
-    public CoworkingMember getCoworkingMember(Long id);
-    public void removeCoworkingMember(Long id);
-    public void updateCoworkingMember(CoworkingMember member);
 }
  

@@ -6,13 +6,13 @@
 
 package ru.dodrde.coworking.application;
 
-import java.util.List;
-import ru.dodrde.coworking.domain.place.Place;
+import ru.dodrde.coworking.domain.option.Option;
+import ru.dodrde.coworking.domain.option.OptionDescription;
 
 /**
  *
  * @author Ильдар
  */
-public interface PlaceService extends CRUDService<Place> {
-    public void createPlace(String title);
+public interface OptionService extends CRUDService<Option> {
+    public void createOption(OptionDescription description);
 }

@@ -1,0 +1,9 @@
+<div>
+    <a href="#/tariff/{{tariff.id}}/edit">Редактировать</a>
+    <p>Название: {{tariff.title}}</p>
+    <p>Описание: {{tariff.description}}</p>
+    <p>Стоимость: {{tariff.price}}</p>
+    <p>Продолжительность: {{tariff.periodQuantity}} {{tariff.durationPeriod}}</p>
+    <p>Опции:</p>
+    <ul><li ng-repeat="option in tariff.options">{{option.title}}</li></ul>
+</div>

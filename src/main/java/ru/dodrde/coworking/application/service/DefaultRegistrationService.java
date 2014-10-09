@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dodrde.coworking.application.MemberRegistrationService;
+import ru.dodrde.coworking.domain.AbstractEntity;
+import ru.dodrde.coworking.domain.EntityRepository;
 import ru.dodrde.coworking.domain.member.CoworkingMember;
 import ru.dodrde.coworking.domain.member.CoworkingMemberData;
 import ru.dodrde.coworking.domain.member.MemberRepository;
@@ -21,7 +23,7 @@ import ru.dodrde.coworking.domain.member.MemberRepository;
  */
 @Service
 @Transactional
-public class DefaultRegistrationService implements MemberRegistrationService {
+public class DefaultRegistrationService extends AbstractCRUDService<CoworkingMember> implements MemberRegistrationService {
 
     @Inject
     private MemberRepository memberRepository;
@@ -34,23 +36,7 @@ public class DefaultRegistrationService implements MemberRegistrationService {
     }
 
     @Override
-    public List<CoworkingMember> getCoworkingMembers() {
-        return memberRepository.getAll();
+    protected EntityRepository getRepository() {
+        return memberRepository;
     }
-
-    @Override
-    public CoworkingMember getCoworkingMember(Long id) {
-        return memberRepository.get(id);
-    }
-
-    @Override
-    public void removeCoworkingMember(Long id) {
-        memberRepository.remove(id);
-    }
-
-    @Override
-    public void updateCoworkingMember(CoworkingMember member) {
-        memberRepository.update(member);
-    }
-    
 }
