@@ -1,4 +1,11 @@
 <div>
     <a href="#/place/{{place.id}}/edit">Редактировать</a>
     <p>Название: {{place.title}}</p>
+    <table>
+        <tr ng-repeat="booking in bookings">
+            <td><a href="#/member/{{booking.memberId}}">{{booking.memberFullname}}</a></td>
+            <td>{{booking.fromTime | date:'yyyy-MM-dd HH:mm'}}</td>
+            <td>{{booking.toTime | date:'yyyy-MM-dd HH:mm'}}</td>
+        </tr>
+    </table>
 </div>

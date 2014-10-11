@@ -7,24 +7,26 @@
 package ru.dodrde.coworking.ui.booking.dto;
 
 import java.util.Date;
+import static ru.dodrde.coworking.domain.tariff.Duration_.periodQuantity;
 
 /**
  *
  * @author Ильдар
  */
-public class NewBookData {
+public class EditBookData {
     private Long memberId;
     private Long placeId;
+    private Long tariffId;
     private Date fromTime;
-    private Date toTime;
 
-    public NewBookData() {
+    public EditBookData() {
     }
 
-    public NewBookData(Long member, Long place, Date fromTime) {
+    public EditBookData(Long member, Long place, Date fromTime,Long tariffId) {
         this.memberId = member;
         this.placeId = place;
         this.fromTime = fromTime;
+        this.tariffId = tariffId;
     }
 
     public Long getMemberId() {
@@ -51,13 +53,13 @@ public class NewBookData {
         this.fromTime = fromTime;
     }
 
-    public Date getToTime() {
-        return toTime;
+    public Long getTariffId() {
+        return tariffId;
     }
 
-    public void setToTime(Date toTime) {
-        this.toTime = toTime;
+    public void setTariffId(Long tariffId) {
+        this.tariffId = tariffId;
     }
-    
+
     
 }

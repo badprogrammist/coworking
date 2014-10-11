@@ -15,7 +15,7 @@ import ru.dodrde.coworking.application.TariffService;
 import ru.dodrde.coworking.domain.EntityRepository;
 import ru.dodrde.coworking.domain.option.Option;
 import ru.dodrde.coworking.domain.tariff.Duration;
-import ru.dodrde.coworking.domain.tariff.DurationPeriod;
+import ru.dodrde.coworking.domain.tariff.OptionPrice;
 import ru.dodrde.coworking.domain.tariff.Tariff;
 import ru.dodrde.coworking.domain.tariff.TariffDescription;
 import ru.dodrde.coworking.domain.tariff.TariffOptionRelation;
@@ -33,23 +33,35 @@ public class DefaultTariffService extends AbstractCRUDService<Tariff> implements
     private TariffRepository tariffRepository;
 
     @Override
-    public void createTariff(TariffDescription description, Duration duration, BigDecimal price, List<Option> options) {
+    public void createTariff(TariffDescription description, Duration duration, BigDecimal price, List<OptionPrice> optionPrices) {
         Tariff tariff = new Tariff(description, duration, price);
-        for (Option option : options) {
-            tariff.getOptionRelations().add(createTariffOptionRelation(tariff, option));
+        for (OptionPrice optionPrice : optionPrices) {
+            tariff.getOptionRelations().add(createTariffOptionRelation(tariff, optionPrice));
         }
         tariffRepository.store(tariff);
     }
 
     @Override
-    public void updateTariff(Tariff tariff, List<Option> options) {
+    public void updateTariff(Tariff tariff, List<OptionPrice> optionPrices) {
+        for(OptionPrice optionPrice : optionPrices) {
+            for(TariffOptionRelation optionRelation : tariff.getOptionRelations()) {
+                if(optionPrice.getOption().equals(optionRelation.getOptionPrice().getOption())) {
+                    optionRelation.getOptionPrice().setPrice(optionPrice.getPrice());
+                }
+            }
+        }
+        intersectOptions(tariff, optionPrices);
+        update(tariff);
+    }
+    
+    private void intersectOptions(Tariff tariff, List<OptionPrice> optionPrices) {
         List<TariffOptionRelation> removeOptions = new ArrayList<>();
-        List<Option> addOption = new ArrayList<>();
+        List<OptionPrice> addOption = new ArrayList<>();
 
         for (TariffOptionRelation optionRelation : tariff.getOptionRelations()) {
             boolean finded = false;
-            for (Option option : options) {
-                if (optionRelation.getOption().equals(option)) {
+            for (OptionPrice optionPrice : optionPrices) {
+                if (optionRelation.getOptionPrice().getOption().equals(optionPrice.getOption())) {
                     finded = true;
                     break;
                 }
@@ -59,22 +71,21 @@ public class DefaultTariffService extends AbstractCRUDService<Tariff> implements
             }
         }
         tariff.getOptionRelations().removeAll(removeOptions);
-        for (Option option : options) {
+        for (OptionPrice optionPrice : optionPrices) {
             boolean finded = false;
             for (TariffOptionRelation optionRelation : tariff.getOptionRelations()) {
-                if (optionRelation.getOption().equals(option)) {
+                if (optionRelation.getOptionPrice().getOption().equals(optionPrice.getOption())) {
                     finded = true;
                     break;
                 }
             }
             if (!finded) {
-                addOption.add(option);
+                addOption.add(optionPrice);
             }
         }
-        for (Option option : addOption) {
-            tariff.getOptionRelations().add(createTariffOptionRelation(tariff, option));
+        for (OptionPrice optionPrice : addOption) {
+            tariff.getOptionRelations().add(createTariffOptionRelation(tariff, optionPrice));
         }
-        update(tariff);
     }
 
     @Override
@@ -83,20 +94,20 @@ public class DefaultTariffService extends AbstractCRUDService<Tariff> implements
     }
 
     @Override
-    public void attachOption(Tariff tariff, Option option) {
-        tariff.getOptionRelations().add(createTariffOptionRelation(tariff, option));
+    public void attachOption(Tariff tariff, OptionPrice optionPrice) {
+        tariff.getOptionRelations().add(createTariffOptionRelation(tariff, optionPrice));
         this.update(tariff);
     }
 
-    private TariffOptionRelation createTariffOptionRelation(Tariff tariff, Option option) {
-        return new TariffOptionRelation(tariff, option);
+    private TariffOptionRelation createTariffOptionRelation(Tariff tariff, OptionPrice optionPrice) {
+        return new TariffOptionRelation(tariff, optionPrice);
     }
 
     @Override
     public void detachOption(Tariff tariff, Option option) {
         TariffOptionRelation candidate = null;
         for (TariffOptionRelation relation : tariff.getOptionRelations()) {
-            if (relation.getOption().equals(option)) {
+            if (relation.getOptionPrice().getOption().equals(option)) {
                 candidate = relation;
                 break;
             }

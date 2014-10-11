@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dodrde.coworking.application.OptionService;
 import ru.dodrde.coworking.application.TariffService;
 import ru.dodrde.coworking.domain.option.Option;
-import ru.dodrde.coworking.domain.tariff.Duration;
 import ru.dodrde.coworking.domain.tariff.DurationPeriod;
+import ru.dodrde.coworking.domain.tariff.OptionPrice;
 import ru.dodrde.coworking.domain.tariff.Tariff;
-import ru.dodrde.coworking.domain.tariff.TariffDescription;
 import ru.dodrde.coworking.domain.tariff.TariffOptionRelation;
 import ru.dodrde.coworking.ui.option.dto.ListOptionData;
 import ru.dodrde.coworking.ui.tariff.dto.ListDurationPeriodData;
@@ -60,11 +59,11 @@ public class TariffController {
             ListTariffData tariffData = new ListTariffData(
                     tariff.getId(),
                     tariff.getDescription().getTitle(),
-                    tariff.getPrice().toString(),
+                    tariff.getTotalPrice().toString(),
                     tariff.getDuration().getPeriodQuantity(),
                     tariff.getDuration().getPeriod().getTitle());
             for (TariffOptionRelation optionRelation : tariff.getOptionRelations()) {
-                tariffData.getOptions().add(optionRelation.getOption().getDescription().getTitle());
+                tariffData.getOptions().add(optionRelation.getOptionPrice().getOption().getDescription().getTitle());
             }
             tariffs.add(tariffData);
         }
@@ -74,15 +73,19 @@ public class TariffController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void addTariff(@RequestBody EditTariffData data) {
-        List<Option> options = new ArrayList<>();
+        List<OptionPrice> optionPrices = new ArrayList<>();
         for (ListOptionData optionData : data.getOptions()) {
-            options.add(optionService.get(optionData.getId()));
+            Option option = optionService.get(optionData.getId());
+            if (option != null) {
+                OptionPrice optionPrice = new OptionPrice(option, optionData.generatePrice());
+                optionPrices.add(optionPrice);
+            }
         }
         tariffService.createTariff(
                 data.generateTarifDescription(),
                 data.generateDuration(),
                 data.generatePrice(),
-                options);
+                optionPrices);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,8 +101,12 @@ public class TariffController {
                     tariff.getPrice().toString(),
                     tariff.getId()
             );
-            for(TariffOptionRelation relation : tariff.getOptionRelations()) {
-                data.getOptions().add(new ListOptionData(relation.getOption().getId(), relation.getOption().getDescription().getTitle()));
+            for (TariffOptionRelation relation : tariff.getOptionRelations()) {
+                data.getOptions().add(new ListOptionData(
+                        relation.getOptionPrice().getOption().getDescription().getTitle(),
+                        relation.getOptionPrice().getPrice().toString(),
+                        relation.getOptionPrice().getOption().getId()
+                ));
             }
             return data;
         }
@@ -121,11 +128,15 @@ public class TariffController {
             tariff.setDuration(data.generateDuration());
             tariff.setPrice(data.generatePrice());
             if (!data.getOptions().isEmpty()) {
-                List<Option> options = new ArrayList<>();
+                List<OptionPrice> optionPrices = new ArrayList<>();
                 for (ListOptionData optionData : data.getOptions()) {
-                    options.add(optionService.get(optionData.getId()));
+                    Option option = optionService.get(optionData.getId());
+                    if (option != null) {
+                        OptionPrice optionPrice = new OptionPrice(option, optionData.generatePrice());
+                        optionPrices.add(optionPrice);
+                    }
                 }
-                tariffService.updateTariff(tariff, options);
+                tariffService.updateTariff(tariff, optionPrices);
             } else {
                 tariffService.update(tariff);
             }

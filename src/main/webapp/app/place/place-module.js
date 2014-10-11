@@ -7,8 +7,9 @@ function PlaceListController($scope, PlaceFactory) {
     };
 }
 
-function PlaceViewController($scope, $routeParams, PlaceFactory) {
+function PlaceViewController($scope, $routeParams, PlaceFactory, BookingFactory) {
     $scope.place = PlaceFactory.get({id: $routeParams.id});
+    $scope.bookings = BookingFactory.memberReservations({placeId: $routeParams.id});
 }
 
 function PlaceCreateController($scope, $location, PlaceFactory) {
@@ -30,7 +31,7 @@ function PlaceEditController($scope, $routeParams, $location, PlaceFactory) {
 }
 
 angular
-        .module('PlaceModule', ['ngRoute', 'ngResource'])
+        .module('PlaceModule', ['ngRoute', 'ngResource','BookingModule'])
         .config(['$routeProvider',
             function($routeProvider) {
                 $routeProvider.

@@ -6,25 +6,34 @@
 
 package ru.dodrde.coworking.domain.tariff;
 
+import java.util.Calendar;
+
 /**
  *
  * @author Ильдар
  */
 public enum DurationPeriod {
     
-    DAY("День"),
-    WEEK("Неделя"),
-    MONTH("Месяц"),
-    YEAR("Год");
+    DAY("День",Calendar.DAY_OF_MONTH),
+    WEEK("Неделя",Calendar.WEEK_OF_MONTH),
+    MONTH("Месяц",Calendar.MONTH),
+    YEAR("Год",Calendar.YEAR);
     
     private final String title;
+    private final int calendarConstant;
     
-    DurationPeriod(String title) {
+    DurationPeriod(String title,int calendarConstant) {
         this.title = title;
+        this.calendarConstant = calendarConstant;
     }
+    
 
     public String getTitle() {
         return title;
+    }
+
+    public int getCalendarConstant() {
+        return calendarConstant;
     }
     
 }

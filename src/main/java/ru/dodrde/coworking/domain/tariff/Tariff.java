@@ -12,6 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -41,7 +42,7 @@ public class Tariff extends AbstractEntity {
     @Column(name="price")
     private BigDecimal price;
     
-    @OneToMany(mappedBy = "tariff",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tariff",cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TariffOptionRelation> optionRelations = new ArrayList<>();
 
     public Tariff() {
@@ -53,6 +54,15 @@ public class Tariff extends AbstractEntity {
         this.price = price;
     }
 
+    public BigDecimal getTotalPrice() {
+        BigDecimal total = new BigDecimal(0.0);
+        total = total.add(price);
+        for(TariffOptionRelation optionRelation : optionRelations) {
+            total = total.add(optionRelation.getOptionPrice().getPrice());
+        }
+        return total;
+    }
+    
     public TariffDescription getDescription() {
         return description;
     }

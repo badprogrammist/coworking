@@ -6,8 +6,6 @@
 package ru.dodrde.coworking.ui.member;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.http.MediaType;
@@ -17,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.dodrde.coworking.application.BookingService;
 import ru.dodrde.coworking.application.MemberRegistrationService;
-import ru.dodrde.coworking.domain.booking.Reservation;
 import ru.dodrde.coworking.domain.member.CoworkingMember;
 import ru.dodrde.coworking.domain.member.CoworkingMemberData;
-import ru.dodrde.coworking.ui.booking.dto.MemberReservationData;
 import ru.dodrde.coworking.ui.member.dto.ListMemberData;
 import ru.dodrde.coworking.ui.member.dto.NewMemberData;
 import ru.dodrde.coworking.ui.member.dto.ViewMemberData;

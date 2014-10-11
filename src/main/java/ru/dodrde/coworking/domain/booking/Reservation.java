@@ -6,6 +6,11 @@
 
 package ru.dodrde.coworking.domain.booking;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import ru.dodrde.coworking.domain.AbstractEntity;
 import ru.dodrde.coworking.domain.member.CoworkingMember;
@@ -41,14 +47,21 @@ public class Reservation extends AbstractEntity {
     
     @Embedded
     private ReservationPeriod reservationPeriod;
+    
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<ReservationOptionRelation> optionRelations = new ArrayList<>();
+    
+    @Column(name="total_cost")
+    private BigDecimal totalCost = new BigDecimal(0.0);
 
     public Reservation() {
     }
     
-    public Reservation(Place place, CoworkingMember member, ReservationPeriod reservationPeriod) {
+    public Reservation(Place place, CoworkingMember member, ReservationPeriod reservationPeriod,BigDecimal totalCost) {
         this.place = place;
         this.member = member;
         this.reservationPeriod = reservationPeriod;
+        this.totalCost = totalCost;
     }
 
     public Place getPlace() {
@@ -73,6 +86,22 @@ public class Reservation extends AbstractEntity {
 
     public void setReservationPeriod(ReservationPeriod reservationPeriod) {
         this.reservationPeriod = reservationPeriod;
+    }
+
+    public List<ReservationOptionRelation> getOptionRelations() {
+        return optionRelations;
+    }
+
+    public void setOptionRelations(List<ReservationOptionRelation> optionRelations) {
+        this.optionRelations = optionRelations;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
     }
     
     

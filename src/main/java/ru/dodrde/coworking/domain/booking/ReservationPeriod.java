@@ -7,11 +7,14 @@
 package ru.dodrde.coworking.domain.booking;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import ru.dodrde.coworking.domain.tariff.Duration;
 
 /**
  *
@@ -24,16 +27,22 @@ public class ReservationPeriod implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fromTime;
     
-    @Column(name="to_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date toTime;
+    @Embedded
+    private Duration duration = new Duration();
 
     public ReservationPeriod() {
     }
 
-    public ReservationPeriod(Date fromTime, Date toTime) {
+    public ReservationPeriod(Date fromTime, Duration duration) {
         this.fromTime = fromTime;
-        this.toTime = toTime;
+        this.duration = duration;
+    }
+    
+    public Date getToTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fromTime);
+        calendar.add(duration.getPeriod().getCalendarConstant(),duration.getPeriodQuantity());
+        return calendar.getTime();
     }
 
     public Date getFromTime() {
@@ -44,12 +53,12 @@ public class ReservationPeriod implements Serializable {
         this.fromTime = fromTime;
     }
 
-    public Date getToTime() {
-        return toTime;
+    public Duration getDuration() {
+        return duration;
     }
 
-    public void setToTime(Date toTime) {
-        this.toTime = toTime;
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
     
     

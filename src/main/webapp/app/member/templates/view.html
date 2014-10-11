@@ -4,10 +4,27 @@
     <p>Фамилия: {{member.lastname}}</p>
     <p>Отчество: {{member.patronymic}}</p>
     <table>
-        <tr ng-repeat="booking in bookings">
-            <td><a href="#/place/{{booking.placeId}}">{{booking.placeTitle}}</a></td>
-            <td>{{booking.fromTime | date:'yyyy-MM-dd HH:mm'}}</td>
-            <td>{{booking.toTime | date:'yyyy-MM-dd HH:mm'}}</td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Место</th>
+                <th>С</th>
+                <th>По</th>
+                <th>Опции</th>
+                <th>Полная стоимость</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="booking in bookings">
+                <td><a href="#/place/{{booking.placeId}}">{{booking.placeTitle}}</a></td>
+                <td>{{booking.fromTime| date:'dd.MM.yyyy'}}</td>
+                <td>{{booking.toTime| date:'dd.MM.yyyy'}}</td>
+                <td>
+                    <ul><li ng-repeat="option in booking.options">{{option.title}}</li></ul>
+                </td>
+                <td>
+                    {{booking.price}}
+                </td>
+            </tr>
+        </tbody>
     </table>
 </div>

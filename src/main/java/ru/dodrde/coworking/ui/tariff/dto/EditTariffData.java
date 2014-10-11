@@ -6,45 +6,31 @@
 
 package ru.dodrde.coworking.ui.tariff.dto;
 
+import ru.dodrde.coworking.ui.duration.dto.EditDurationData;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import ru.dodrde.coworking.domain.tariff.Duration;
-import ru.dodrde.coworking.domain.tariff.DurationPeriod;
 import ru.dodrde.coworking.domain.tariff.TariffDescription;
-import ru.dodrde.coworking.ui.DTO;
 import ru.dodrde.coworking.ui.option.dto.ListOptionData;
 
 /**
  *
  * @author Ильдар
  */
-public class EditTariffData extends DTO {
+public class EditTariffData extends EditDurationData {
     
     private String title;
     private String description;
-    private String durationPeriod;
-    private Integer periodQuantity;
     private String price;
     private List<ListOptionData> options = new ArrayList<>();
 
     public EditTariffData() {
     }
 
-    public EditTariffData(String title, String description, String durationPeriod, Integer periodQuantity, String price) {
-        this.title = title;
-        this.description = description;
-        this.durationPeriod = durationPeriod;
-        this.periodQuantity = periodQuantity;
-        this.price = price;
-    }
-    
     public EditTariffData(String title, String description, String durationPeriod, Integer periodQuantity, String price, Long id) {
-        super(id);
+        super(durationPeriod,periodQuantity,id);
         this.title = title;
         this.description = description;
-        this.durationPeriod = durationPeriod;
-        this.periodQuantity = periodQuantity;
         this.price = price;
     }
     
@@ -56,24 +42,7 @@ public class EditTariffData extends DTO {
         return new BigDecimal(getPrice());
     }
     
-    public Duration generateDuration() {
-        return new Duration(generateDurationPeriod(), getPeriodQuantity());
-    }
     
-    private DurationPeriod generateDurationPeriod() {
-        DurationPeriod period = null;
-        try {
-            period = DurationPeriod.valueOf(getDurationPeriod());
-        } catch(Exception ex) {
-            for(DurationPeriod dp : DurationPeriod.values()) {
-                if(dp.getTitle().equals(getDurationPeriod())) {
-                    period = dp;
-                    break;
-                }
-            }
-        }
-        return period;
-    }
     
     public String getTitle() {
         return title;
@@ -89,23 +58,6 @@ public class EditTariffData extends DTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-    public String getDurationPeriod() {
-        return durationPeriod;
-    }
-
-    public void setDurationPeriod(String durationPeriod) {
-        this.durationPeriod = durationPeriod;
-    }
-
-    public Integer getPeriodQuantity() {
-        return periodQuantity;
-    }
-
-    public void setPeriodQuantity(Integer periodQuantity) {
-        this.periodQuantity = periodQuantity;
     }
 
     public String getPrice() {

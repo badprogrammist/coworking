@@ -6,7 +6,10 @@
 
 package ru.dodrde.coworking.ui.booking.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import ru.dodrde.coworking.ui.option.dto.ListOptionData;
 
 /**
  *
@@ -17,15 +20,18 @@ public class MemberReservationData {
     private String placeTitle;
     private Date fromTime;
     private Date toTime;
+    private String price;
+    private List<ListOptionData> options = new ArrayList<>();
 
     public MemberReservationData() {
     }
 
-    public MemberReservationData(Long placeId, String placeTitle, Date fromTime, Date toDate) {
+    public MemberReservationData(Long placeId, String placeTitle, Date fromTime, Date toDate,String price) {
         this.placeId = placeId;
         this.placeTitle = placeTitle;
         this.fromTime = fromTime;
         this.toTime = toDate;
+        this.price = price;
     }
 
     public Long getPlaceId() {
@@ -58,6 +64,22 @@ public class MemberReservationData {
 
     public void setToTime(Date toTime) {
         this.toTime = toTime;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public List<ListOptionData> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<ListOptionData> options) {
+        this.options = options;
     }
     
     

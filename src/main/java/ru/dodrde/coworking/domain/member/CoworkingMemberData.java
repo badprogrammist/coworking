@@ -9,6 +9,7 @@ package ru.dodrde.coworking.domain.member;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import org.eclipse.persistence.sdo.types.SDOWrapperType;
 
 /**
  *
@@ -35,6 +36,17 @@ public class CoworkingMemberData implements Serializable {
         this.patronymic = patronymic;
     }
 
+    public String getFullname() {
+        StringBuilder builder = new StringBuilder(name);
+        if(lastname != null && !lastname.isEmpty()) {
+            builder.append(" ").append(lastname);
+        }
+        if(patronymic != null && !patronymic.isEmpty()) {
+            builder.append(" ").append(patronymic);
+        }
+        return builder.toString();
+    }
+    
     public String getName() {
         return name;
     }

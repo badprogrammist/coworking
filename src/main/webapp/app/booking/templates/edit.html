@@ -1,6 +1,18 @@
 <div>
-    <p>С: <input type="date" ng-model="booking.fromTime" required="true"></p>
-    <p>По: <input type="date" ng-model="booking.toTime" required="true"></p>
+    <p>Дата начала аренды: <input type="date" ng-model="booking.fromTime" required="true"></p>
+    <p>
+        Тариф: 
+    </p>
+    <table>
+        <tr ng-repeat="tariff in tariffs">
+            <td>
+                <input type="radio" name="tariff_input_radio" ng-model="booking.tariffId" ng-value="tariff.id">
+            </td>
+            <td>
+                {{tariff.title}}
+            </td>
+        </tr>
+    </table>
     <p>
         Пользователь: 
         <select ng-model="booking.memberId">

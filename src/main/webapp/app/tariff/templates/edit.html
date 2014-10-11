@@ -1,7 +1,8 @@
 <div>
     <p>Название: <input type="text" ng-model="tariff.title" min="1" required="true"></p>
     <p>Описание: <input type="text" ng-model="tariff.description" min="1" required="true"></p>
-    <p>Стоимость: <input type="text" ng-model="tariff.price" min="1" required="true"></p>
+    <p>Стоимость аренды: <input type="text" ng-model="tariff.price" min="1" required="true"></p>
+    <p>Полная стоимость: {{getTotalPrice()}}</p>
     <p>
         Продолжительность: 
         <input type="text" ng-model="tariff.periodQuantity" min="1" required="true">
@@ -12,8 +13,9 @@
     <p>Опции: </p>
     <table>
         <tr ng-repeat="option in options">
-            <td><input type="checkbox"  ng-checked="checkedOption(option)" ng-click="changeOption(option)"/></td>
+            <td><input type="checkbox"  ng-checked="isCheckedOption(option)" ng-click="toggleOption(option)"/></td>
             <td>{{option.title}}</td>
+            <td><input type="text" ng-model="findTariffOption(option).option.price" ng-change="changeTariffPrice(option,findTariffOption(option).option.price)" ng-disabled="!isCheckedOption(option)"></td>
         </tr>
     </table>
 

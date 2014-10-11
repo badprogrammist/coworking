@@ -6,6 +6,9 @@
 
 package ru.dodrde.coworking.domain.tariff;
 
+import java.math.BigDecimal;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -26,7 +29,7 @@ import ru.dodrde.coworking.domain.option.Option;
     @NamedQuery(name = "TariffOptionRelation.findAll",
             query = "Select c from TariffOptionRelation c"),
     @NamedQuery(name = "TariffOptionRelation.findByOption",
-            query = "Select c from TariffOptionRelation c WHERE c.option = :option"),
+            query = "Select c from TariffOptionRelation c WHERE c.optionPrice.option = :option"),
     @NamedQuery(name = "TariffOptionRelation.findByTariff",
             query = "Select c from TariffOptionRelation c WHERE c.tariff = :tariff")
 })
@@ -36,16 +39,15 @@ public class TariffOptionRelation extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Tariff tariff;
     
-    @JoinColumn(name = "option_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Option option;
+    @Embedded
+    private OptionPrice optionPrice = new OptionPrice();
 
     public TariffOptionRelation() {
     }
 
-    public TariffOptionRelation(Tariff tariff, Option option) {
+    public TariffOptionRelation(Tariff tariff, OptionPrice optionPrice) {
         this.tariff = tariff;
-        this.option = option;
+        this.optionPrice = optionPrice;
     }
 
     public Tariff getTariff() {
@@ -56,13 +58,14 @@ public class TariffOptionRelation extends AbstractEntity {
         this.tariff = tariff;
     }
 
-    public Option getOption() {
-        return option;
+    public OptionPrice getOptionPrice() {
+        return optionPrice;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
+    public void setOptionPrice(OptionPrice optionPrice) {
+        this.optionPrice = optionPrice;
     }
+
     
     
 }

@@ -1,7 +1,8 @@
-function BookingCreateController($scope, $location, BookingFactory, MemberFactory, PlaceFactory) {
+function BookingCreateController($scope, $location, BookingFactory, MemberFactory, PlaceFactory,TariffFactory) {
     $scope.booking = {};
     $scope.members = MemberFactory.query();
     $scope.places = PlaceFactory.query();
+    $scope.tariffs = TariffFactory.query();
     $scope.save = function() {
         BookingFactory.save({}, $scope.booking, function() {
             $location.path('/booking');
@@ -10,7 +11,7 @@ function BookingCreateController($scope, $location, BookingFactory, MemberFactor
 }
 
 angular
-        .module('BookingModule', ['ngRoute', 'ngResource', 'MemberModule', 'PlaceModule'])
+        .module('BookingModule', ['ngRoute', 'ngResource', 'MemberModule', 'PlaceModule','TariffModule'])
         .config(['$routeProvider',
             function($routeProvider) {
                 $routeProvider.
@@ -20,7 +21,8 @@ angular
         .factory('BookingFactory', function($resource,$routeParams) {
             return $resource('booking/:id', {}, {
                 save: {method: 'POST'},
-                memberReservations: {method: 'GET', isArray: true, params : {memberId:$routeParams.memberId}}
+                memberReservations: {method: 'GET', isArray: true, params : {id:$routeParams.memberId}},
+                placeReservations: {method: 'GET', isArray: true, params : {id:$routeParams.placeId}}
             });
         })
         .controller('BookingCreateController', BookingCreateController);
