@@ -1,29 +1,35 @@
-<div>
-    <p>Дата начала аренды: <input type="date" ng-model="booking.fromTime" required="true"></p>
-    <p>
-        Тариф: 
-    </p>
-    <table>
-        <tr ng-repeat="tariff in tariffs">
-            <td>
-                <input type="radio" name="tariff_input_radio" ng-model="booking.tariffId" ng-value="tariff.id">
-            </td>
-            <td>
-                {{tariff.title}}
-            </td>
-        </tr>
-    </table>
-    <p>
-        Пользователь: 
-        <select ng-model="booking.memberId">
-            <option ng-repeat="member in members" value="{{member.id}}">{{member.name}} {{member.lastname}}</option> 
+<form role="form">
+    <div class="form-group">
+        <label for="from_time">Дата начала аренды</label>
+        <input id="from_time" class="form-control" type="date" ng-model="booking.fromTime" required="true">
+    </div>
+    <div class="form-group">
+        <label for="tariff">Тариф</label>
+        <table id="tariff" class="table">
+            <tr ng-repeat="tariff in tariffs">
+                <td>
+                    <input type="radio" name="tariff_input_radio" ng-model="booking.tariffId" ng-value="tariff.id">
+                </td>
+                <td>
+                    {{tariff.title}}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="form-group">
+        <label for="user">Пользователь</label>
+        <select id="user" class="form-control" ng-model="booking.userId">
+            <option ng-repeat="user in users" value="{{user.id}}">{{user.name}} {{user.lastname}}</option> 
         </select>
-    </p>
-    <p>
-        Рабочее место: 
-        <select ng-model="booking.placeId">
+    </div>
+    <div class="form-group">
+        <label for="place">Рабочее место</label>
+        <select id="place" class="form-control" ng-model="booking.placeId">
             <option ng-repeat="place in places" value="{{place.id}}">{{place.title}}</option> 
         </select>
-    </p>
-    <button type="submit" ng-click="save()">Сохранить</button>
-</div>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="save()">Сохранить</button>
+</form>
+
+    
+

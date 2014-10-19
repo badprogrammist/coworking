@@ -27,12 +27,16 @@ public class Place extends AbstractEntity {
     
     @Column(name="title")
     private String title;
+    
+    @Column(name="capacity")
+    private Integer capacity = 1;
 
     public Place() {
     }
     
-    public Place(String title) {
+    public Place(String title,Integer capacity) {
         this.title = title;
+        this.capacity = capacity;
     }
 
     public String getTitle() {
@@ -43,5 +47,12 @@ public class Place extends AbstractEntity {
         this.title = title;
     }
     
-    
+    public Integer getCapacity() {
+        if(capacity == null) capacity = 1;
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
 }

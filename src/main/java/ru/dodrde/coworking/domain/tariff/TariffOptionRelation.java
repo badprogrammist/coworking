@@ -6,18 +6,12 @@
 
 package ru.dodrde.coworking.domain.tariff;
 
-import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import ru.dodrde.coworking.domain.AbstractEntity;
 import ru.dodrde.coworking.domain.option.Option;
+import ru.dodrde.coworking.domain.tariff.condition.ConditionOptionRelation;
 
 /**
  *
@@ -29,43 +23,18 @@ import ru.dodrde.coworking.domain.option.Option;
     @NamedQuery(name = "TariffOptionRelation.findAll",
             query = "Select c from TariffOptionRelation c"),
     @NamedQuery(name = "TariffOptionRelation.findByOption",
-            query = "Select c from TariffOptionRelation c WHERE c.optionPrice.option = :option"),
+            query = "Select c from TariffOptionRelation c WHERE c.option = :option"),
     @NamedQuery(name = "TariffOptionRelation.findByTariff",
-            query = "Select c from TariffOptionRelation c WHERE c.tariff = :tariff")
+            query = "Select c from TariffOptionRelation c WHERE c.condition = :condition")
 })
-public class TariffOptionRelation extends AbstractEntity {
+public class TariffOptionRelation extends ConditionOptionRelation<Tariff> {
     
-    @JoinColumn(name = "tariff_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tariff tariff;
-    
-    @Embedded
-    private OptionPrice optionPrice = new OptionPrice();
 
     public TariffOptionRelation() {
     }
 
-    public TariffOptionRelation(Tariff tariff, OptionPrice optionPrice) {
-        this.tariff = tariff;
-        this.optionPrice = optionPrice;
+    public TariffOptionRelation(Tariff tariff, Option option) {
+        super(tariff, option);
     }
 
-    public Tariff getTariff() {
-        return tariff;
-    }
-
-    public void setTariff(Tariff tariff) {
-        this.tariff = tariff;
-    }
-
-    public OptionPrice getOptionPrice() {
-        return optionPrice;
-    }
-
-    public void setOptionPrice(OptionPrice optionPrice) {
-        this.optionPrice = optionPrice;
-    }
-
-    
-    
 }

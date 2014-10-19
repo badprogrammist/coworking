@@ -18,19 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dodrde.coworking.application.BookingService;
-import ru.dodrde.coworking.application.MemberRegistrationService;
-import ru.dodrde.coworking.application.PlaceService;
+import ru.dodrde.coworking.application.UserRegistrationService;
 import ru.dodrde.coworking.application.TariffService;
 import ru.dodrde.coworking.domain.booking.Reservation;
 import ru.dodrde.coworking.domain.booking.ReservationOptionRelation;
-import ru.dodrde.coworking.domain.booking.ReservationPeriod;
-import ru.dodrde.coworking.domain.member.CoworkingMember;
-import ru.dodrde.coworking.domain.place.Place;
+import ru.dodrde.coworking.domain.user.User;
 import ru.dodrde.coworking.domain.tariff.Tariff;
-import ru.dodrde.coworking.ui.booking.dto.EditBookData;
-import ru.dodrde.coworking.ui.booking.dto.MemberReservationData;
-import ru.dodrde.coworking.ui.booking.dto.PlaceReservationData;
-import ru.dodrde.coworking.ui.option.dto.ListOptionData;
+import ru.dodrde.coworking.ui.booking.dto.BookEditData;
+import ru.dodrde.coworking.ui.booking.dto.UserReservationData;
+import ru.dodrde.coworking.ui.option.dto.OptionListData;
 
 /**
  *
@@ -41,64 +37,38 @@ import ru.dodrde.coworking.ui.option.dto.ListOptionData;
 public class BookingController {
 
     @Inject
-    private MemberRegistrationService memberRegistrationService;
-
-    @Inject
-    private PlaceService placeService;
+    private UserRegistrationService userRegistrationService;
 
     @Inject
     private BookingService bookingService;
-    
+
     @Inject
     private TariffService tariffService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void book(@RequestBody EditBookData data) {
-        Place place = placeService.get(data.getPlaceId());
-        CoworkingMember member = memberRegistrationService.get(data.getMemberId());
+    public void book(@RequestBody BookEditData data) {
+        User member = userRegistrationService.get(data.getMemberId());
         Tariff tariff = tariffService.get(data.getTariffId());
-        if (place != null && member != null && tariff != null) {
-            bookingService.book(member, place, tariff, data.getFromTime());
+        if (member != null && tariff != null) {
+            bookingService.book(member, tariff, data.getFromTime());
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET,params = "memberId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, params = "userId", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<MemberReservationData> getMemberReservations(@RequestParam("memberId") Long memberId) {
-        CoworkingMember member = memberRegistrationService.get(memberId);
+    public List<UserReservationData> getUserReservations(@RequestParam("userId") Long memberId) {
+        User member = userRegistrationService.get(memberId);
         if (member != null) {
-            List<MemberReservationData> reservations = new ArrayList<>();
+            List<UserReservationData> reservations = new ArrayList<>();
             for (Reservation reservation : bookingService.getMemberReservations(member)) {
-                Long placeId = reservation.getPlace().getId();
-                String placeTitle = reservation.getPlace().getTitle();
-                Date fromTime = reservation.getReservationPeriod().getFromTime();
-                Date toTime = reservation.getReservationPeriod().getToTime();
-                MemberReservationData data = new MemberReservationData(placeId, placeTitle, fromTime, toTime, reservation.getTotalCost().toString());
-                for(ReservationOptionRelation r : reservation.getOptionRelations()) {
-                    data.getOptions().add(new ListOptionData(r.getOption().getDescription().getTitle(), "0", r.getOption().getId()));
+                Date fromTime = reservation.getFromTime();
+                Date toTime = reservation.getToTime();
+                UserReservationData data = new UserReservationData(fromTime, toTime, reservation.getPrice().toString());
+                for (ReservationOptionRelation optionRelation : reservation.getOptionRelations()) {
+                    data.getOptions().add(new OptionListData(optionRelation.getOption().getDescription().getTitle(), optionRelation.getOption().getId()));
                 }
-                
                 reservations.add(data);
-            }
-            return reservations;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-    }
-    
-    @RequestMapping(method = RequestMethod.GET,params = "placeId", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<PlaceReservationData> getPlaceReservations(@RequestParam("placeId") Long placeId) {
-        Place place = placeService.get(placeId);
-        if (place != null) {
-            List<PlaceReservationData> reservations = new ArrayList<>();
-            for (Reservation reservation : bookingService.getPlaceReservations(place)) {
-                Long memberId = reservation.getMember().getId();
-                String memberFullname = reservation.getMember().getMemberData().getFullname();
-                Date fromTime = reservation.getReservationPeriod().getFromTime();
-                Date toTime = reservation.getReservationPeriod().getToTime();
-                reservations.add(new PlaceReservationData(memberId, memberFullname, fromTime, toTime));
             }
             return reservations;
         } else {

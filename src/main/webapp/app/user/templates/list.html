@@ -1,0 +1,14 @@
+<form role="form">
+    <div class="form-group">
+        <a class="btn btn-default btn-xs" ng-href="#/user/new">Зарегистрировать пользователя</a>
+    </div>
+    <div class="form-group">
+    <table class="table">
+        <tr ng-repeat="user in users">
+            <td>{{user.name}} {{user.lastname}}</td>
+            <td><a ng-href="#/user/{{user.id}}">Просмотр</a></td>
+            <td><a ng-href="#/user" ng-click="remove(user)">Удалить</a></td>
+        </tr>
+    </table>
+    </div>
+</form>

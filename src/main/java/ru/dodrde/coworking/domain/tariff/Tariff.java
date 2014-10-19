@@ -5,19 +5,15 @@
  */
 package ru.dodrde.coworking.domain.tariff;
 
+import ru.dodrde.coworking.domain.tariff.condition.PlaceAttachStatus;
+import ru.dodrde.coworking.domain.tariff.condition.Duration;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import ru.dodrde.coworking.domain.AbstractEntity;
+import ru.dodrde.coworking.domain.tariff.condition.Condition;
 
 /**
  *
@@ -31,68 +27,28 @@ import ru.dodrde.coworking.domain.AbstractEntity;
     @NamedQuery(name = "Tariff.findByDuration",
             query = "Select c from Tariff c WHERE c.duration = :duration")
 })
-public class Tariff extends AbstractEntity {
+public class Tariff extends Condition<TariffOptionRelation> {
 
     @Embedded
     private TariffDescription description = new TariffDescription();
     
-    @Embedded
-    private Duration duration = new Duration();
     
-    @Column(name="price")
-    private BigDecimal price;
-    
-    @OneToMany(mappedBy = "tariff",cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<TariffOptionRelation> optionRelations = new ArrayList<>();
-
     public Tariff() {
     }
 
-    public Tariff(TariffDescription description,Duration duration, BigDecimal price) {
-        this.description = description;
-        this.duration = duration;
-        this.price = price;
+    public Tariff(TariffDescription description,Duration duration, BigDecimal price, PlaceAttachStatus placeAttachStatus) {
+        super(duration, price, placeAttachStatus);
     }
 
-    public BigDecimal getTotalPrice() {
-        BigDecimal total = new BigDecimal(0.0);
-        total = total.add(price);
-        for(TariffOptionRelation optionRelation : optionRelations) {
-            total = total.add(optionRelation.getOptionPrice().getPrice());
-        }
-        return total;
-    }
-    
     public TariffDescription getDescription() {
+        if(description == null) {
+            description = new TariffDescription();
+        }
         return description;
     }
 
     public void setDescription(TariffDescription description) {
         this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
-    }
-
-    public List<TariffOptionRelation> getOptionRelations() {
-        return optionRelations;
-    }
-
-    public void setOptionRelations(List<TariffOptionRelation> optionRelations) {
-        this.optionRelations = optionRelations;
     }
 
 }

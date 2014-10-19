@@ -8,14 +8,12 @@ package ru.dodrde.coworking.domain.booking;
 
 import java.util.List;
 import ru.dodrde.coworking.domain.EntityRepository;
-import ru.dodrde.coworking.domain.member.CoworkingMember;
-import ru.dodrde.coworking.domain.place.Place;
+import ru.dodrde.coworking.domain.user.User;
 
 /**
  *
  * @author Ильдар
  */
 public interface ReservationRepository extends EntityRepository<Reservation> {
-    public List<Reservation> getMemberReservations(CoworkingMember member);
-    public List<Reservation> getPlaceReservations(Place place);
+    public List<Reservation> getUserReservations(User user);
 }

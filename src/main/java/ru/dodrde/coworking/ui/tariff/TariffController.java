@@ -18,14 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dodrde.coworking.application.OptionService;
 import ru.dodrde.coworking.application.TariffService;
 import ru.dodrde.coworking.domain.option.Option;
-import ru.dodrde.coworking.domain.tariff.DurationPeriod;
-import ru.dodrde.coworking.domain.tariff.OptionPrice;
 import ru.dodrde.coworking.domain.tariff.Tariff;
 import ru.dodrde.coworking.domain.tariff.TariffOptionRelation;
-import ru.dodrde.coworking.ui.option.dto.ListOptionData;
-import ru.dodrde.coworking.ui.tariff.dto.ListDurationPeriodData;
-import ru.dodrde.coworking.ui.tariff.dto.ListTariffData;
-import ru.dodrde.coworking.ui.tariff.dto.EditTariffData;
+import ru.dodrde.coworking.ui.option.dto.OptionListData;
+import ru.dodrde.coworking.ui.tariff.dto.TariffListData;
+import ru.dodrde.coworking.ui.tariff.dto.TariffEditData;
 
 /**
  *
@@ -41,29 +38,19 @@ public class TariffController {
     @Inject
     private OptionService optionService;
 
-    @RequestMapping(value = "/period", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<ListDurationPeriodData> getDurationPeriods() {
-        List<ListDurationPeriodData> result = new ArrayList<>();
-        for (DurationPeriod period : DurationPeriod.values()) {
-            result.add(new ListDurationPeriodData(period.getTitle(), period.name()));
-        }
-        return result;
-    }
-
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ListTariffData> getTariffs() {
-        List<ListTariffData> tariffs = new ArrayList<>();
+    public List<TariffListData> getTariffs() {
+        List<TariffListData> tariffs = new ArrayList<>();
         for (Tariff tariff : tariffService.getAll()) {
-            ListTariffData tariffData = new ListTariffData(
+            TariffListData tariffData = new TariffListData(
                     tariff.getId(),
                     tariff.getDescription().getTitle(),
-                    tariff.getTotalPrice().toString(),
+                    tariff.getPrice().toString(),
                     tariff.getDuration().getPeriodQuantity(),
                     tariff.getDuration().getPeriod().getTitle());
             for (TariffOptionRelation optionRelation : tariff.getOptionRelations()) {
-                tariffData.getOptions().add(optionRelation.getOptionPrice().getOption().getDescription().getTitle());
+                tariffData.getOptions().add(optionRelation.getOption().getDescription().getTitle());
             }
             tariffs.add(tariffData);
         }
@@ -72,45 +59,38 @@ public class TariffController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void addTariff(@RequestBody EditTariffData data) {
-        List<OptionPrice> optionPrices = new ArrayList<>();
-        for (ListOptionData optionData : data.getOptions()) {
-            Option option = optionService.get(optionData.getId());
-            if (option != null) {
-                OptionPrice optionPrice = new OptionPrice(option, optionData.generatePrice());
-                optionPrices.add(optionPrice);
-            }
-        }
+    public void addTariff(@RequestBody TariffEditData data) {
         tariffService.createTariff(
-                data.generateTarifDescription(),
+                data.generateTariffDescription(),
                 data.generateDuration(),
                 data.generatePrice(),
-                optionPrices);
+                data.generatePlaceAttachStatus(),
+                getOptionsFromEditData(data));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EditTariffData getViewTariff(@PathVariable("id") Long id) {
+    public TariffEditData getViewTariff(@PathVariable("id") Long id) {
         Tariff tariff = tariffService.get(id);
         if (tariff != null) {
-            EditTariffData data = new EditTariffData(
+            TariffEditData data = new TariffEditData(
                     tariff.getDescription().getTitle(),
                     tariff.getDescription().getDescription(),
                     tariff.getDuration().getPeriod().getTitle(),
                     tariff.getDuration().getPeriodQuantity(),
                     tariff.getPrice().toString(),
+                    tariff.getPlaceAttachStatus().getTitle(),
                     tariff.getId()
             );
             for (TariffOptionRelation relation : tariff.getOptionRelations()) {
-                data.getOptions().add(new ListOptionData(
-                        relation.getOptionPrice().getOption().getDescription().getTitle(),
-                        relation.getOptionPrice().getPrice().toString(),
-                        relation.getOptionPrice().getOption().getId()
+                data.getOptions().add(new OptionListData(
+                        relation.getOption().getDescription().getTitle(),
+                        relation.getOption().getId()
                 ));
             }
             return data;
         }
-        return new EditTariffData();
+        return new TariffEditData();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -121,26 +101,29 @@ public class TariffController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateTariff(@RequestBody EditTariffData data) {
+    public void updateTariff(@RequestBody TariffEditData data) {
         Tariff tariff = tariffService.get(data.getId());
         if (tariff != null) {
-            tariff.setDescription(data.generateTarifDescription());
+            tariff.setDescription(data.generateTariffDescription());
             tariff.setDuration(data.generateDuration());
             tariff.setPrice(data.generatePrice());
             if (!data.getOptions().isEmpty()) {
-                List<OptionPrice> optionPrices = new ArrayList<>();
-                for (ListOptionData optionData : data.getOptions()) {
-                    Option option = optionService.get(optionData.getId());
-                    if (option != null) {
-                        OptionPrice optionPrice = new OptionPrice(option, optionData.generatePrice());
-                        optionPrices.add(optionPrice);
-                    }
-                }
-                tariffService.updateTariff(tariff, optionPrices);
+                tariffService.updateTariff(tariff, getOptionsFromEditData(data));
             } else {
                 tariffService.update(tariff);
             }
         }
+    }
+
+    private List<Option> getOptionsFromEditData(TariffEditData data) {
+        List<Option> options = new ArrayList<>();
+        for (OptionListData optionData : data.getOptions()) {
+            Option option = optionService.get(optionData.getId());
+            if (option != null) {
+                options.add(option);
+            }
+        }
+        return options;
     }
 
 }

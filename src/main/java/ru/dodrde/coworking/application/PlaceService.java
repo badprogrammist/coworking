@@ -6,7 +6,6 @@
 
 package ru.dodrde.coworking.application;
 
-import java.util.List;
 import ru.dodrde.coworking.domain.place.Place;
 
 /**
@@ -14,5 +13,5 @@ import ru.dodrde.coworking.domain.place.Place;
  * @author Ильдар
  */
 public interface PlaceService extends CRUDService<Place> {
-    public void createPlace(String title);
+    public void createPlace(String title, Integer capacity);
 }

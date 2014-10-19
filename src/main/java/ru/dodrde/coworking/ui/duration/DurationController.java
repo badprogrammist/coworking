@@ -12,8 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.dodrde.coworking.domain.tariff.DurationPeriod;
-import ru.dodrde.coworking.ui.tariff.dto.ListDurationPeriodData;
+import ru.dodrde.coworking.domain.tariff.condition.DurationPeriod;
+import ru.dodrde.coworking.ui.duration.dto.DurationPeriodListData;
 
 /**
  *
@@ -25,10 +25,10 @@ public class DurationController {
 
     @RequestMapping(value = "/period", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ListDurationPeriodData> getDurationPeriods() {
-        List<ListDurationPeriodData> result = new ArrayList<>();
+    public List<DurationPeriodListData> getDurationPeriods() {
+        List<DurationPeriodListData> result = new ArrayList<>();
         for (DurationPeriod period : DurationPeriod.values()) {
-            result.add(new ListDurationPeriodData(period.getTitle(), period.name()));
+            result.add(new DurationPeriodListData(period.getTitle(), period.name()));
         }
         return result;
     }

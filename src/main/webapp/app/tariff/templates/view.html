@@ -1,10 +1,13 @@
-<div>
-    <a href="#/tariff/{{tariff.id}}/edit">Редактировать</a>
-    <p>Название: {{tariff.title}}</p>
-    <p>Описание: {{tariff.description}}</p>
-    <p>Стоимость аренды: {{tariff.price}}</p>
-    <p>Полная стоимость: {{getTotalPrice()}}</p>
-    <p>Продолжительность: {{tariff.periodQuantity}} {{tariff.durationPeriod}}</p>
-    <p>Опции:</p>
-    <ul><li ng-repeat="option in tariff.options">{{option.title}} ({{option.price}})</li></ul>
-</div>
+<form role="form">
+    <div class="form-group">
+        <a class="btn btn-default btn-xs" ng-href="#/tariff/{{tariff.id}}/edit">Редактировать</a>
+    </div>
+    <div class="form-group"><label>Название</label> {{tariff.title}}</div>
+    <div class="form-group"><label>Описание</label> {{tariff.description}}</div>
+    <div class="form-group"><label>Стоимость аренды</label> {{tariff.price}}</div>
+    <div class="form-group"><label>Продолжительность</label> {{tariff.periodQuantity}} {{tariff.durationPeriod}}</div>
+    <div class="form-group">
+        <label>Опции</label>
+        <ul><li ng-repeat="option in tariff.options">{{option.title}}</li></ul>
+    </div>
+</form>

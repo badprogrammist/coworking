@@ -7,40 +7,58 @@ function PlaceListController($scope, PlaceFactory) {
     };
 }
 
-function PlaceViewController($scope, $routeParams, PlaceFactory, BookingFactory) {
-    $scope.place = PlaceFactory.get({id: $routeParams.id});
-    $scope.bookings = BookingFactory.memberReservations({placeId: $routeParams.id});
+function PlaceViewController($scope, $stateParams, PlaceFactory, BookingFactory) {
+    $scope.place = PlaceFactory.get({id: $stateParams.id});
+    $scope.bookings = BookingFactory.userReservations({placeId: $stateParams.id});
 }
 
 function PlaceCreateController($scope, $location, PlaceFactory) {
     $scope.place = {};
     $scope.save = function() {
         PlaceFactory.save({}, $scope.place, function() {
-            $location.path('/place');
+            $location.path('/place/list');
         });
     };
 }
 
-function PlaceEditController($scope, $routeParams, $location, PlaceFactory) {
-    $scope.place = PlaceFactory.get({id: $routeParams.id});
+function PlaceEditController($scope, $stateParams, $location, PlaceFactory) {
+    $scope.place = PlaceFactory.get({id: $stateParams.id});
     $scope.save = function() {
         $scope.place.$update(function() {
-            $location.path('/place');
+            $location.path('/place/list');
         });
     };
 }
 
 angular
-        .module('PlaceModule', ['ngRoute', 'ngResource','BookingModule'])
-        .config(['$routeProvider',
-            function($routeProvider) {
-                $routeProvider.
-                        when('/place', {templateUrl: 'app/place/templates/list.html', controller: 'PlaceListController'}).
-                        when('/place/new', {templateUrl: 'app/place/templates/edit.html', controller: 'PlaceCreateController'}).
-                        when('/place/:id', {templateUrl: 'app/place/templates/view.html', controller: 'PlaceViewController'}).
-                        when('/place/:id/edit', {templateUrl: 'app/place/templates/edit.html', controller: 'PlaceEditController'});
-            }
-        ])
+        .module('PlaceModule', ['ui.router', 'ngResource','BookingModule'])
+        .config(function($stateProvider, $urlRouterProvider) {
+            $stateProvider
+                    .state('place', {
+                        url: "/place",
+                        templateUrl: "app/place/templates/main.html"
+                    })
+                    .state('place.list', {
+                        url: "/list",
+                        templateUrl: "app/place/templates/list.html",
+                        controller: 'PlaceListController'
+                    })
+                    .state('place.new', {
+                        url: "/new",
+                        templateUrl: "app/place/templates/edit.html",
+                        controller: 'CreateController'
+                    })
+                    .state('place.view', {
+                        url: "/:id",
+                        templateUrl: "app/place/templates/view.html",
+                        controller: 'PlaceViewController'
+                    })
+                    .state('place.edit', {
+                        url: "/:id/edit",
+                        templateUrl: "app/place/templates/edit.html",
+                        controller: 'PlaceEditController'
+                    });
+        })
         .factory('PlaceFactory', function($resource) {
             return $resource('place/:id', {}, {
                 query: {method: 'GET', isArray: true},

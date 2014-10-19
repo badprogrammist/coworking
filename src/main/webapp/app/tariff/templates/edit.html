@@ -1,23 +1,34 @@
-<div>
-    <p>Название: <input type="text" ng-model="tariff.title" min="1" required="true"></p>
-    <p>Описание: <input type="text" ng-model="tariff.description" min="1" required="true"></p>
-    <p>Стоимость аренды: <input type="text" ng-model="tariff.price" min="1" required="true"></p>
-    <p>Полная стоимость: {{getTotalPrice()}}</p>
-    <p>
-        Продолжительность: 
-        <input type="text" ng-model="tariff.periodQuantity" min="1" required="true">
-        <select ng-model="tariff.durationPeriod">
+<form role="form">
+    <div class="form-group">
+        <label for="title">Название</label>
+        <input type="text" class="form-control" id="title" ng-model="tariff.title" min="1" required="true">
+    </div>
+    <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea class="form-control" id="description" ng-model="tariff.description" min="1" required="true"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="price">Стоимость аренды</label>
+        <input class="form-control" id="price" ng-model="tariff.price" min="1" required="true">
+    </div>
+    <div class="form-group">
+        <label for="periodQuantity">Продолжительность</label>
+        <input type="text" class="form-control" id="periodQuantity" ng-model="tariff.periodQuantity" min="1" required="true">
+        <select class="form-control" ng-model="tariff.durationPeriod">
             <option ng-repeat="period in periods" value="{{period.name}}" ng-selected="period.title == tariff.durationPeriod">{{period.title}}</option> 
         </select>
-    </p>
-    <p>Опции: </p>
-    <table>
-        <tr ng-repeat="option in options">
-            <td><input type="checkbox"  ng-checked="isCheckedOption(option)" ng-click="toggleOption(option)"/></td>
-            <td>{{option.title}}</td>
-            <td><input type="text" ng-model="findTariffOption(option).option.price" ng-change="changeTariffPrice(option,findTariffOption(option).option.price)" ng-disabled="!isCheckedOption(option)"></td>
-        </tr>
-    </table>
+    </div>
+    <div class="form-group">
+        <label>Опции</label>
+        <table id="option" class="table">
+            <tr ng-repeat="option in options">
+                <td><input type="checkbox"  ng-checked="isCheckedOption(option)" ng-click="toggleOption(option)"/></td>
+                <td>{{option.title}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default" ng-click="save()">Сохранить</button>
+    </div>
+</form>
 
-    <button type="submit" ng-click="save()">Сохранить</button>
-</div>

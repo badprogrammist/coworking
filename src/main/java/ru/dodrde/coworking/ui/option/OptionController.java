@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dodrde.coworking.application.OptionService;
 import ru.dodrde.coworking.domain.option.Option;
 import ru.dodrde.coworking.domain.option.OptionDescription;
-import ru.dodrde.coworking.ui.option.dto.ListOptionData;
-import ru.dodrde.coworking.ui.option.dto.NewOptionData;
-import ru.dodrde.coworking.ui.option.dto.ViewOptionData;
+import ru.dodrde.coworking.ui.option.dto.OptionListData;
+import ru.dodrde.coworking.ui.option.dto.OptionEditData;
+import ru.dodrde.coworking.ui.option.dto.OptionViewData;
 
 /**
  *
@@ -36,30 +36,30 @@ public class OptionController {
     
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ListOptionData> getOptions() {
-        List<ListOptionData> options = new ArrayList<>();
+    public List<OptionListData> getOptions() {
+        List<OptionListData> options = new ArrayList<>();
         for(Option option : optionService.getAll()) {
-            options.add(new ListOptionData(option.getId(), option.getDescription().getTitle()));
+            options.add(new OptionListData(option.getId(), option.getDescription().getTitle()));
         }
         return options;
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void addOption(@RequestBody NewOptionData data) {
+    public void addOption(@RequestBody OptionEditData data) {
         OptionDescription description = new OptionDescription(data.getTitle(), data.getDescription());
         optionService.createOption(description);
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ViewOptionData getOption(@PathVariable("id") Long id) {
+    public OptionViewData getOption(@PathVariable("id") Long id) {
         Option option = optionService.get(id);
         if(option != null) {
-            ViewOptionData data = new ViewOptionData(option.getId(), option.getDescription().getTitle(),option.getDescription().getDescription());
+            OptionViewData data = new OptionViewData(option.getId(), option.getDescription().getTitle(),option.getDescription().getDescription());
             return data;
         }
-        return new ViewOptionData();
+        return new OptionViewData();
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +70,7 @@ public class OptionController {
     
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateOption(@RequestBody ViewOptionData data) {
+    public void updateOption(@RequestBody OptionViewData data) {
         Option option = optionService.get(data.getId());
         if(option != null) {
             option.getDescription().setTitle(data.getTitle());

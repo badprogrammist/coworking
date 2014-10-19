@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import ru.dodrde.coworking.domain.booking.Reservation;
 import ru.dodrde.coworking.domain.booking.ReservationRepository;
-import ru.dodrde.coworking.domain.member.CoworkingMember;
+import ru.dodrde.coworking.domain.user.User;
 import ru.dodrde.coworking.domain.place.Place;
 import ru.dodrde.coworking.infrastructure.persistence.AbstractRepositoryJPA;
 
@@ -31,19 +31,12 @@ public class ReservationRepositoryJPA extends AbstractRepositoryJPA<Reservation>
     }
 
     @Override
-    public List<Reservation> getMemberReservations(CoworkingMember member) {
-        return getEntityManager().createNamedQuery("Reservation.findByMember", Reservation.class)
-                .setParameter("member", member)
+    public List<Reservation> getUserReservations(User user) {
+        return getEntityManager().createNamedQuery("Reservation.findByUser", Reservation.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 
-    @Override
-    public List<Reservation> getPlaceReservations(Place place) {
-        return getEntityManager().createNamedQuery("Reservation.findByPlace", Reservation.class)
-                .setParameter("place", place)
-                .getResultList();
-    }
-    
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;

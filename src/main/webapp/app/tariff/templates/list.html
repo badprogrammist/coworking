@@ -1,10 +1,14 @@
-<div>
-    <a href="#/tariff/new">Создать новый тариф</a>
-    <table>
+<form role="form">
+    <div class="form-group">
+        <a class="btn btn-default btn-xs" ng-href="#/tariff/new">Создать новый тариф</a>
+    </div>
+    <div class="form-group">
+    <table class="table">
         <tr ng-repeat="tariff in tariffs">
             <td>{{tariff.title}}</td>
-            <td><a href="#/tariff/{{tariff.id}}">Просмотр</a></td>
-            <td><a href="#/tariff" ng-click="remove(tariff)">Удалить</a></td>
+            <td><a ng-href="#/tariff/{{tariff.id}}">Просмотр</a></td>
+            <td><a ng-href="#/tariff" ng-click="remove(tariff)">Удалить</a></td>
         </tr>
     </table>
-</div>
+    </div>
+</form>

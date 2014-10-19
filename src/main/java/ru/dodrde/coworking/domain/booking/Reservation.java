@@ -7,22 +7,22 @@
 package ru.dodrde.coworking.domain.booking;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
+import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import ru.dodrde.coworking.domain.AbstractEntity;
-import ru.dodrde.coworking.domain.member.CoworkingMember;
-import ru.dodrde.coworking.domain.place.Place;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import ru.dodrde.coworking.domain.user.User;
+import ru.dodrde.coworking.domain.tariff.condition.Condition;
+import ru.dodrde.coworking.domain.tariff.condition.Duration;
+import ru.dodrde.coworking.domain.tariff.condition.PlaceAttachStatus;
 
 /**
  *
@@ -32,78 +32,48 @@ import ru.dodrde.coworking.domain.place.Place;
 @Table(name = "reservations")
 @NamedQueries({
     @NamedQuery(name = "Reservation.findAll",query = "Select c from Reservation  c"),
-    @NamedQuery(name = "Reservation.findByMember",query = "Select c from Reservation c WHERE c.member = :member"),
-    @NamedQuery(name = "Reservation.findByPlace",query = "Select c from Reservation c WHERE c.place = :place")
+    @NamedQuery(name = "Reservation.findByUser",query = "Select c from Reservation c WHERE c.user = :user")
 })
-public class Reservation extends AbstractEntity {
+public class Reservation extends Condition<ReservationOptionRelation> {
     
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Place place;
+    private User user;
     
-    @JoinColumn(name = "member_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CoworkingMember member;
+    @Column(name="from_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fromTime;
     
-    @Embedded
-    private ReservationPeriod reservationPeriod;
-    
-    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ReservationOptionRelation> optionRelations = new ArrayList<>();
-    
-    @Column(name="total_cost")
-    private BigDecimal totalCost = new BigDecimal(0.0);
-
     public Reservation() {
     }
-    
-    public Reservation(Place place, CoworkingMember member, ReservationPeriod reservationPeriod,BigDecimal totalCost) {
-        this.place = place;
-        this.member = member;
-        this.reservationPeriod = reservationPeriod;
-        this.totalCost = totalCost;
+
+    public Reservation(User user, Date fromTime, Duration duration, BigDecimal price, PlaceAttachStatus placeAttachStatus) {
+        super(duration, price, placeAttachStatus);
+        this.user = user;
+        this.fromTime = fromTime;
     }
 
-    public Place getPlace() {
-        return place;
-    }
-
-    public void setPlace(Place place) {
-        this.place = place;
-    }
-
-    public CoworkingMember getMember() {
-        return member;
-    }
-
-    public void setMember(CoworkingMember member) {
-        this.member = member;
-    }
-
-    public ReservationPeriod getReservationPeriod() {
-        return reservationPeriod;
-    }
-
-    public void setReservationPeriod(ReservationPeriod reservationPeriod) {
-        this.reservationPeriod = reservationPeriod;
-    }
-
-    public List<ReservationOptionRelation> getOptionRelations() {
-        return optionRelations;
-    }
-
-    public void setOptionRelations(List<ReservationOptionRelation> optionRelations) {
-        this.optionRelations = optionRelations;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(BigDecimal totalCost) {
-        this.totalCost = totalCost;
+    public Date getToTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fromTime);
+        calendar.add(getDuration().getPeriod().getCalendarConstant(),getDuration().getPeriodQuantity());
+        return calendar.getTime();
     }
     
-    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getFromTime() {
+        return fromTime;
+    }
+
+    public void setFromTime(Date fromTime) {
+        this.fromTime = fromTime;
+    }
     
 }

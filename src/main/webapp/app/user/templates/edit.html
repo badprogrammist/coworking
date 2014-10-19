@@ -1,0 +1,17 @@
+<form role="form">
+    <div class="form-group">
+        <label for="name">Имя</label>
+        <input type="text" class="form-control" id="name" ng-model="user.name" min="1" required="true">
+    </div>
+    <div class="form-group">
+        <label for="lastname">Фамилия</label>
+        <input type="text" class="form-control" id="lastname" ng-model="user.lastname" min="1" required="true">
+    </div>
+    <div class="form-group">
+        <label for="patronymic">Отчество</label>
+        <input type="text" class="form-control" id="patronymic" ng-model="user.patronymic" min="1" required="true">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default" ng-click="save()">Сохранить</button>
+    </div>
+</form>

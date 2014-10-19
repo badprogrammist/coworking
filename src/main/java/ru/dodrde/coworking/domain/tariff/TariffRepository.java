@@ -6,6 +6,7 @@
 
 package ru.dodrde.coworking.domain.tariff;
 
+import ru.dodrde.coworking.domain.tariff.condition.Duration;
 import java.util.List;
 import ru.dodrde.coworking.domain.EntityRepository;
 

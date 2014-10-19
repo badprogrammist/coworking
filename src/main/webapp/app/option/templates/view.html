@@ -1,5 +1,7 @@
-<div>
-    <a href="#/option/{{option.id}}/edit">Редактировать</a>
-    <p>Название: {{option.title}}</p>
-    <p>Описание: {{option.description}}</p>
-</div>
+<form role="form">
+    <div class="form-group">
+        <a class="btn btn-default btn-xs" ng-href="#/option/{{option.id}}/edit">Редактировать</a>
+    </div>
+    <div class="form-group"><label>Название</label> {{option.title}}</div>
+    <div class="form-group"><label>Описание</label> {{option.description}}</div>
+</form>

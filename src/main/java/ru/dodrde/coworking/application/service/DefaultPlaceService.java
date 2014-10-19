@@ -27,8 +27,8 @@ public class DefaultPlaceService extends AbstractCRUDService<Place> implements P
     private PlaceRepository placeRepository;
     
     @Override
-    public void createPlace(String title) {
-        Place place = new Place(title);
+    public void createPlace(String title, Integer capacity) {
+        Place place = new Place(title,capacity);
         placeRepository.store(place);
     }
 

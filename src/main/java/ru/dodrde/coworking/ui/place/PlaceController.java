@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dodrde.coworking.application.PlaceService;
 import ru.dodrde.coworking.domain.place.Place;
-import ru.dodrde.coworking.ui.place.dto.ListPlaceData;
-import ru.dodrde.coworking.ui.place.dto.NewPlaceData;
-import ru.dodrde.coworking.ui.place.dto.ViewPlaceData;
+import ru.dodrde.coworking.ui.place.dto.PlaceListData;
+import ru.dodrde.coworking.ui.place.dto.PlaceEditData;
 
 /**
  *
@@ -35,29 +34,29 @@ public class PlaceController {
     
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ListPlaceData> getPlaces() {
-        List<ListPlaceData> places = new ArrayList<>();
+    public List<PlaceListData> getPlaces() {
+        List<PlaceListData> places = new ArrayList<>();
         for(Place place : placeService.getAll()) {
-            places.add(new ListPlaceData(place.getId(), place.getTitle()));
+            places.add(new PlaceListData(place.getId(), place.getTitle()));
         }
         return places;
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void addPlace(@RequestBody NewPlaceData data) {
-        placeService.createPlace(data.getTitle());
+    public void addPlace(@RequestBody PlaceEditData data) {
+        placeService.createPlace(data.getTitle(),data.getCapacity());
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ViewPlaceData getPlace(@PathVariable("id") Long id) {
+    public PlaceEditData getPlace(@PathVariable("id") Long id) {
         Place place = placeService.get(id);
         if(place != null) {
-            ViewPlaceData data = new ViewPlaceData(place.getId(), place.getTitle());
+            PlaceEditData data = new PlaceEditData( place.getTitle(), place.getCapacity(), place.getId());
             return data;
         }
-        return new ViewPlaceData();
+        return new PlaceEditData();
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,10 +67,11 @@ public class PlaceController {
     
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updatePlace(@RequestBody ViewPlaceData data) {
+    public void updatePlace(@RequestBody PlaceEditData data) {
         Place place = placeService.get(data.getId());
         if(place != null) {
             place.setTitle(data.getTitle());
+            place.setCapacity(data.getCapacity());
             placeService.update(place);
         }
     }

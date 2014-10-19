@@ -7,14 +7,11 @@
 package ru.dodrde.coworking.domain.booking;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import ru.dodrde.coworking.domain.AbstractEntity;
 import ru.dodrde.coworking.domain.option.Option;
+import ru.dodrde.coworking.domain.tariff.condition.ConditionOptionRelation;
 
 /**
  *
@@ -27,41 +24,16 @@ import ru.dodrde.coworking.domain.option.Option;
             query = "Select c from ReservationOptionRelation c"),
     @NamedQuery(name = "ReservationOptionRelation.findByOption",
             query = "Select c from ReservationOptionRelation c WHERE c.option = :option"),
-    @NamedQuery(name = "ReservationOptionRelation.findByTariff",
-            query = "Select c from ReservationOptionRelation c WHERE c.reservation = :reservation")
+    @NamedQuery(name = "ReservationOptionRelation.findByReservation",
+            query = "Select c from ReservationOptionRelation c WHERE c.condition = :condition")
 })
-public class ReservationOptionRelation extends AbstractEntity {
-    
-    @JoinColumn(name = "reservation_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Reservation reservation;
-    
-    @JoinColumn(name = "option_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Option option;
+public class ReservationOptionRelation extends ConditionOptionRelation<Reservation> {
 
     public ReservationOptionRelation() {
     }
 
-    public ReservationOptionRelation(Reservation reservation, Option option) {
-        this.reservation = reservation;
-        this.option = option;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public Option getOption() {
-        return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
+    public ReservationOptionRelation(Reservation condition, Option option) {
+        super(condition, option);
     }
     
     

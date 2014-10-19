@@ -10,7 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import ru.dodrde.coworking.domain.tariff.Duration;
+import ru.dodrde.coworking.domain.tariff.condition.Duration;
 import ru.dodrde.coworking.domain.tariff.Tariff;
 import ru.dodrde.coworking.domain.tariff.TariffRepository;
 import ru.dodrde.coworking.infrastructure.persistence.AbstractRepositoryJPA;
